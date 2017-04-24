@@ -20,64 +20,68 @@ function elm (options, isProduction) {
 
   const productionDefaultConfig = {
     exclude: [/elm-stuff/, /node_modules/],
-    loader: 'elm-webpack-loader'
+    hot: false,
+    options: {}
   }
   const developmentDefaultConfig = {
     exclude: [/elm-stuff/, /node_modules/],
-    loader: 'elm-hot-loader!elm-webpack-loader',
-    verbose: 'true',
-    warn: 'true',
-    debug: 'true'
+    hot: true,
+    options: {
+      verbose: true,
+      warn: true,
+      debug: true
+    }
   }
 
   const elmDefaultConfig = isProduction ? productionDefaultConfig : developmentDefaultConfig
 
-  return Object.assign((context) => {
+  return Object.assign(context => prevConfig => {
     context.elm = context.elm || elmDefaultConfig
 
-    if ('cwd' in options) {
-      context.elm.cwd = options.cwd
-    }
     if ('exclude' in options) {
       context.elm.exclude = options.exclude
     }
     if ('include' in options) {
       context.elm.include = options.include
     }
+    if ('cwd' in options) {
+      context.elm.options.cwd = options.cwd
+    }
     if ('maxInstances' in options) {
-      context.elm.maxInstances = options.maxInstances
+      context.elm.options.maxInstances = options.maxInstances
     }
 
-    // Return empty config snippet (configuration will be created by the post hook)
-    return {}
+    // Return unchanged config (configuration will be created by the post hook)
+    return prevConfig
   }, { post: postConfig })
 }
 
-function postConfig (context) {
+function postConfig (context, util) {
   const exclude = context.elm.exclude
   const include = context.elm.include
-  const loader = context.elm.loader
 
-  const elmOptions = Object.assign({}, context.elm)
-  delete elmOptions.exclude
-  delete elmOptions.include
-  delete elmOptions.loader
+  const hotLoader = { loader: 'elm-hot-loader' }
 
   const loaderConfig = Object.assign({
     test: context.fileType('application/x-elm'),
-    loader: loader + (Object.keys(elmOptions).length ? `?${JSON.stringify(elmOptions)}` : '')
+    use: (context.elm.hot ? [hotLoader] : []).concat([
+      {
+        loader: 'elm-webpack-loader',
+        options: context.elm.options
+      }
+    ])
   }, exclude && {
     exclude: Array.isArray(exclude) ? exclude : [ exclude ]
   }, include && {
     include: Array.isArray(include) ? include : [ include ]
   })
 
-  return {
+  return util.merge({
     resolve: {
       extensions: [ '.elm' ]
     },
     module: {
-      loaders: [ loaderConfig ]
+      rules: [ loaderConfig ]
     }
-  }
+  })
 }
