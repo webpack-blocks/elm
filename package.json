@@ -25,7 +25,10 @@
   },
   "devDependencies": {
     "@webpack-blocks/core": "^1.0.0",
+    "@webpack-blocks/webpack": "^1.0.0",
     "ava": "^0.25.0",
-    "standard": "^11.0.1"
+    "jsdom": "^9.12.0",
+    "standard": "^11.0.1",
+    "webpack": "^3.11.0"
   }
 }
