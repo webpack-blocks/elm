@@ -24,6 +24,8 @@
     "elm-webpack-loader": "^4.5.0"
   },
   "devDependencies": {
-    "@webpack-blocks/core": "^1.0.0"
+    "@webpack-blocks/core": "^1.0.0",
+    "ava": "^0.25.0",
+    "standard": "^11.0.1"
   }
 }
