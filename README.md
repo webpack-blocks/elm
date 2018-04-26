@@ -1,5 +1,6 @@
 # webpack-blocks - Elm
 
+[![Build Status](https://travis-ci.org/webpack-blocks/elm.svg?branch=master)](https://travis-ci.org/webpack-blocks/elm)
 [![Gitter chat](https://badges.gitter.im/webpack-blocks.svg)](https://gitter.im/webpack-blocks)
 [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![NPM Version](https://img.shields.io/npm/v/@webpack-blocks/elm.svg)](https://www.npmjs.com/package/@webpack-blocks/elm)
